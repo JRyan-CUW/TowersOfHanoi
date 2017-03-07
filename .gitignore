@@ -1,0 +1,129 @@
+package com.example.jacobryan.towerofhanoi;
+
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Toast;
+
+public class MainActivity extends AppCompatActivity {
+    private ViewGroup stagingArea; //represents are where popped disk waits for destination
+    private ViewGroup tower0; //vertical linear layout - represents far left tower
+    private ViewGroup tower1; //vertical linear layout - represents middle tower
+    private ViewGroup tower2; //vertical linear layout - represents far right tower
+    private String currMode;
+    private Tower[] theTowers;
+    private Disk stagingDisk;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        this.setContentView(R.layout.activity_main);
+
+        this.stagingArea = (ViewGroup) this.findViewById(R.id.stagingArea);
+        this.tower0 = (ViewGroup) this.findViewById(R.id.tower0);
+        this.tower1 = (ViewGroup) this.findViewById(R.id.tower1);
+        this.tower2 = (ViewGroup) this.findViewById(R.id.tower2);
+        this.currMode = "SRC";
+
+        this.theTowers = new Tower[4];
+        for(int i = 0; i < this.theTowers.length; i++)
+        {
+            this.theTowers[i] = new Tower();
+        }
+        this.theTowers[0].push(new Disk(9));
+        this.theTowers[0].push(new Disk(6));
+        this.theTowers[0].push(new Disk(3));
+        this.theTowers[3].push(stagingDisk);
+
+    }
+
+    public void tower0ButtonPressed(View v)
+    {
+        try
+        {
+            if (this.currMode == "SRC")
+            {
+                if (this.tower0.getChildCount() > 0)
+                {
+                    View temp = this.tower0.getChildAt(0);
+                    this.tower0.removeViewAt(0);
+                    this.stagingArea.addView(temp);
+                    this.currMode = "DEST";
+                    this.stagingDisk = this.theTowers[0].pop();
+                    this.theTowers[3].push(stagingDisk);
+                }
+            }
+            else if(this.theTowers[0].peek() > this.theTowers[3].peek())
+            {
+                View temp = this.stagingArea.getChildAt(0);
+                this.stagingArea.removeViewAt(0);
+                this.tower0.addView(temp, 0);
+                this.currMode = "SRC";
+                this.stagingDisk = this.theTowers[3].pop();
+                this.theTowers[0].push(stagingDisk);
+            }
+        }
+        catch (Exception e)
+        {
+            Toast toast = Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT);
+            toast.show();
+        }
+    }
+
+    public void tower1ButtonPressed(View v) {
+        try
+        {
+            if (this.currMode == "SRC") {
+                if (this.tower1.getChildCount() > 0) {
+                    View temp = this.tower1.getChildAt(0);
+                    this.tower1.removeViewAt(0);
+                    this.stagingArea.addView(temp);
+                    this.currMode = "DEST";
+                    this.stagingDisk = this.theTowers[1].pop();
+                    this.theTowers[3].push(stagingDisk);
+                } else if (this.theTowers[1].peek() > this.theTowers[3].peek()) {
+                    View temp = this.stagingArea.getChildAt(0);
+                    this.stagingArea.removeViewAt(0);
+                    this.tower1.addView(temp, 0);
+                    this.currMode = "SRC";
+                    this.stagingDisk = this.theTowers[3].pop();
+                    this.theTowers[1].push(stagingDisk);
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            Toast toast = Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT);
+            toast.show();
+        }
+    }
+
+    public void tower2ButtonPressed(View v) {
+        try
+        {
+            if (this.currMode == "SRC") {
+                if (this.tower2.getChildCount() > 0) {
+                    View temp = this.tower2.getChildAt(0);
+                    this.tower2.removeViewAt(0);
+                    this.stagingArea.addView(temp);
+                    this.currMode = "DEST";
+                    this.stagingDisk = this.theTowers[2].pop();
+                    this.theTowers[3].push(stagingDisk);
+                }
+            } else if (this.theTowers[2].peek() > this.theTowers[3].peek()) {
+                View temp = this.stagingArea.getChildAt(0);
+                this.stagingArea.removeViewAt(0);
+                this.tower2.addView(temp, 0);
+                this.currMode = "SRC";
+                this.stagingDisk = this.theTowers[3].pop();
+                this.theTowers[2].push(stagingDisk);
+            }
+        }
+        catch (Exception e)
+        {
+            Toast toast = Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT);
+            toast.show();
+        }
+    }
+}
